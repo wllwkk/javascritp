@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>爆炸特效</title>
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body > div:first-of-type {
+            width: 800px;
+            height: 450px;
+            background: #bbbbbb;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -400px;
+            margin-top: -225px;
+
+        }
+
+        body > div > div {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<div>
+
+</div>
+<script type="text/javascript">
+    function startBox() {
+        this.allDate();
+        this.createPicture(this);
+        this.setIn(this);
+    }
+
+    startBox.prototype = {
+        'allDate':function(){
+            this.oDiv = document.querySelector('body>div');
+            this.countX = 5;
+            this.countY = 5;
+            this.index = 99999;
+            this.imgIndex = 1;
+            this.countArray = ['img/b1.jpeg', 'img/b2.jpg', 'img/b3,jpg']
+        },
+        'createPicture': function (_this) {
+            _this.divTop = document.createElement('div');
+            _this.divTop.style.zIndex = _this.index;
+            _this.oDiv.appendChild(_this.divTop);
+            for (_this.i = 0; _this.i < _this.countY; _this.i++) {
+                for (_this.j = 0; _this.j < _this.countX; _this.j++) {
+                    _this.nowPicture = document.createElement('div');
+                    _this.pictureWidth = _this.oDiv.offsetWidth / _this.countX;
+                    _this.pictureHeight = _this.oDiv.offsetHeight / _this.countY;
+                    _this.nowPicture.style.width = _this.pictureWidth + 'px';
+                    _this.nowPicture.style.height = _this.pictureHeight + 'px';
+                    _this.nowPicture.style.backgroundImage = 'url(' + _this.countArray[_this.imgIndex] + ')';
+                    _this.nowPicture.style.backgroundPositionX = _this.oDiv.offsetWidth / _this.countX * -_this.j + 'px';
+                    _this.nowPicture.style.backgroundPositionY = _this.oDiv.offsetHeight / _this.countY * -_this.i + 'px';
+                    _this.nowPicture.style.float = 'left';
+                    _this.nowPicture.style.transition = Math.random() * 1.1 + 1 + 's ease all';
+                    _this.divTop.appendChild(_this.nowPicture);
+                }
+            }
+            _this.allPicture = _this.divTop.children;
+        },
+        'clearSet': function (_this) {
+            setInterval(function () {
+                document.querySelector('body>div>div:first-of-type').parentNode.removeChild(document.querySelector('body>div>div:first-of-type'));
+            }, 3000)
+        },
+        'setIn': function (_this) {
+            _this.createPicture(_this);
+            setInterval(function () {
+                for (let i = 0; i < _this.allPicture.length; i++) {
+                    _this.allPicture[i].style.transformOrigin = Math.random() * 100 + '% ' + Math.random() * 100 + '%';
+                    _this.allPicture[i].style.transform = 'perspective(' + ((Math.random() * 300) + 500) + 'px) rotateX(' + ((Math.random() * 720) - 360) + 'deg) rotateY(' + ((Math.random() * 720) - 360) + 'deg) scale(' + ((Math.random() * 3.5) + 0.75) + ') translateX(' + ((Math.random() * 360) - 180) + 'px) translateY(' + ((Math.random() * 360) - 180) + 'px)';
+                    _this.allPicture[i].style.opacity = '0';
+                }
+                _this.imgIndex++;
+                if (_this.imgIndex == 2) _this.imgIndex = 0;
+                _this.index--;
+                _this.createPicture(_this);
+            }, 3000)
+            _this.clearSet(_this);
+
+        }
+    }
+    new startBox();
+</script>
+</body>
+</html>

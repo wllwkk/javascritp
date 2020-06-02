@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>幻灯片</title>
+    <style type="text/css">
+        * {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        body > div:first-of-type {
+            width: 500px;
+            height: 500px;
+            /*background: #25a1f1;*/
+            position: absolute;
+            left: 50%;
+            top: 100px;
+            margin-left: -250px;
+            overflow: hidden
+        }
+
+        body > div:first-of-type > ul:nth-child(1) {
+            width: 2000px;
+            height: 400px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transition: 0.5s all ease;
+        }
+
+        body > div:first-of-type > ul:nth-child(1) > li {
+            float: left;
+        }
+
+        body > div:first-of-type > ul:nth-child(1) > li:nth-child(1) {
+            width: 500px;
+            height: 400px;
+            background: #63eff7;
+        }
+
+        body > div:first-of-type > ul:nth-child(1) > li:nth-child(2) {
+            width: 500px;
+            height: 400px;
+            background: grey;
+        }
+
+        body > div:first-of-type > ul:nth-child(1) > li:nth-child(3) {
+            width: 500px;
+            height: 400px;
+            background: #CC00FF;
+        }
+
+        body > div:first-of-type > ul:nth-child(1) > li:nth-child(4) {
+            width: 500px;
+            height: 400px;
+            background: #bbbbbb;
+        }
+
+        body > div:first-of-type > div {
+            width: 500px;
+            height: 400px;
+/*            background: #fede4f;*/
+            position: absolute;
+            top: 400px;
+            left: 0;
+        }
+
+        body > div:first-of-type > div > ul {
+            width: 350px;
+            height: 25px;
+            float: left;
+            /*background: ghostwhite;*/
+            position: absolute;
+            left: 50%;
+            margin-left: -175px;
+            margin-top: 20px;
+        }
+
+        body > div:first-of-type > div > ul > li {
+            width: 75px;
+            height: 15px;
+            float: left;
+            margin-left: 10px;
+            background: #7bb2ff;
+            cursor: pointer;
+            transition: 0.5s all ease;
+            border-radius: 6px;
+        }
+
+        body > div:first-of-type > div > ul div {
+            width: 0;
+            height: 15px;
+            background: #ccc;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <ul>
+        <li style="background-image: url('img/s1.jpg');background-size: 100%"></li>
+        <li style="background-image: url('img/s2.jpg');background-size: 100%"></li>
+        <li style="background-image: url('img/s3.jpg');background-size: 100%"></li>
+        <li style="background-image: url('img/s4.jpg');background-size: 100%"></li>
+    </ul>
+    <div>
+        <ul>
+            <li>
+                <div></div>
+            </li>
+            <li>
+                <div></div>
+            </li>
+            <li>
+                <div></div>
+            </li>
+            <li>
+                <div></div>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    function startMove() {
+        this.allDate(this);
+        this.addEvent(this);
+        this.selectOption(this);
+
+    }
+
+    startMove.prototype = {
+        'selectOption': function (_this) {
+            clearInterval(_this.timer);
+            _this.setIn(_this);
+        },
+        'clearScale': function (_this) {
+            for (_this.i = 0; _this.i < _this.allLi.length; _this.i++) {
+                _this.allLi[_this.i].style.width = '0';
+            }
+        },
+        'setIn': function (_this) {
+            _this.timer = setInterval(function () {
+                _this.allLi[_this.index].style.width = _this.liScale + '%';
+                _this.liScale++;
+                if (_this.liScale == 100) {
+                    _this.clearScale(_this);
+                    _this.liScale = 0;
+                    _this.index++;
+                    /*_this.allSlide.style.left = _this.index * -500 + 'px';*/
+                    _this.allSlide.style.left = Number(_this.allSlide.offsetLeft) == -1500? 0 + 'px' : _this.index * -500 + 'px';
+                }
+                if (_this.index == 4) _this.index = 0;
+            }, 10);
+        },
+        'addEvent': function (_this) {
+            for (let i = 0; i < _this.allBigLi.length; i++) {
+                _this.allBigLi[i].onmouseover = function () {
+                    clearInterval(_this.timer);
+                }
+                _this.allBigLi[i].onmouseout = function () {
+                    clearInterval(_this.timer);
+                    _this.setIn(_this);
+                }
+                _this.allBigLi[i].onclick = function () {
+                    _this.clearScale(_this);
+                    _this.liScale = 0;
+                    _this.index = i;
+                    _this.allSlide.style.left = -500 * _this.index + 'px';
+                }
+            }
+        },
+        'allDate': function (_this) {
+            _this.allLi = document.querySelectorAll('body>div:first-of-type>div>ul div');
+            _this.allBigLi = document.querySelectorAll('body>div:first-of-type>div>ul>li');
+            _this.allSlide = document.querySelector('body>div:first-of-type>ul:nth-child(1)');
+            _this.timer = null;
+            _this.index = 0;
+            _this.liScale = 0;
+        }
+    }
+    new startMove();
+</script>
+</body>
+</html>

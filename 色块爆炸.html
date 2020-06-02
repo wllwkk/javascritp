@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="zh">
+<head>
+    <title>色块爆炸</title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            background: black;
+            overflow: hidden;
+        }
+
+        /*body>div{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: #ccc;
+            transform-style: preserve-3d;
+            transform: perspective(800px) rotateY(45deg) translateZ(100px);
+        }*/
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+    function divExplode(opt) {
+        this.opt = opt;
+        this.onlyDiv = document.createElement('div');
+        this.onlyDiv.style.cssText = 'width: 100%;height: 100%;position: absolute;transform-style: preserve-3d;transform: perspective(800px) rotateY(45deg) ;';
+        document.querySelector('body').appendChild(this.onlyDiv);
+        this.createNode(this);
+        this.changeResize(this);
+        this.setIn(this);
+
+    }
+
+    divExplode.prototype = {
+        createNode: function (_this) {
+            for (let i = 0; i < _this.opt.divY; i++) {
+                for (let j = 0; j < _this.opt.divX; j++) {
+                    _this.allDiv = document.createElement('div');
+                    _this.allDiv.style.width = _this.onlyDiv.offsetWidth / _this.opt.divX + 'px';
+                    _this.allDiv.style.height = _this.onlyDiv.offsetHeight / _this.opt.divY + 'px';
+                    _this.allDiv.style.background = 'rgb(' + Number(Math.random() * 255) + ',' + Number(Math.random() * 255) + ',' + Number(Math.random() * 255) + ')';
+                    _this.allDiv.style.opacity = '0.8';
+                    _this.allDiv.style.float = 'left';
+                    _this.onlyDiv.appendChild(_this.allDiv);
+
+                }
+            }
+            _this.nowDiv = document.querySelectorAll('body>div>div');
+        },
+        changeResize: function (_this) {
+            onresize = function () {
+                _this.onlyDiv.innerHTML = ' ';
+                _this.createNode(_this);
+            }
+
+        },
+        setIn: function (_this) {
+            setTimeout(function () {
+                for (let i = 0; i < _this.nowDiv.length; i++) {
+                    /*_this.nowDiv[i].style.transformStyle = 'preserve-3d'*/
+                    _this.nowDiv[i].style.transform = 'perspective(800px) translateZ(' + (Math.random() * 400 - 200) + 'px) rotateY(' + (Math.random() * 360 - 180) + 'deg) rotateX(' + (Math.random() * 360 - 180) + 'deg)';
+                    _this.nowDiv[i].style.transition = (Math.random() * 0.4 + 0.5) + 's all ease';
+                    _this.nowDiv[i].style.opacity = '0';
+                }
+            }, 1000)
+        }
+    }
+    new divExplode({
+        divX: 15,
+        divY: 15
+    });
+
+</script>
+</body>
+</html>

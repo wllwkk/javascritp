@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>画</title>
+    <style type="text/css">
+        *{
+            margin:0;
+            padding:0;
+        }
+        #container{
+            width: 700px;
+            height: 600px;
+            border: 3px solid #808080;
+            background: #bbbbbb;
+            margin: 20px auto;
+            position: relative;
+            border-radius: 10px;
+        }
+        #container div{
+            border: 1px dashed red;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+        }
+        p{
+            width: 100px;
+            height: 50px;
+            position: relative;
+            background: #63eff7;
+            left: 50%;
+            top: -20px;
+            margin-left: -50px;
+            text-align: center;
+            line-height: 45px;
+            font-size: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id = "container"></div>
+<p>长方形画板</p>
+<script type="text/javascript">
+    let oDiv = document.getElementById('container');
+    oDiv.onmousedown = function(e) {
+            let ev = e || event;
+            /*let iTarget = ev.target || ev.srcElement;*/
+            let cuboidCreat = document.createElement('div');
+            let nowX = ev.clientX - oDiv.offsetLeft;
+            let nowY = ev.clientY - oDiv.offsetTop;
+            /*cuboidCreat.id = 'cuboid1';*/
+            cuboidCreat.style.left = nowX + 'px';
+            cuboidCreat.style.top = nowY + 'px';
+            this.appendChild(cuboidCreat);
+            document.onmousemove = function(e) {
+                let ev = e || event;
+                let newX = ev.clientX - oDiv.offsetLeft;
+                let newY = ev.clientY - oDiv.offsetTop;
+                let nowWidth = newX - nowX
+                let nowHeight = newY - nowY;
+                if (nowHeight < 0) {
+                    cuboidCreat.style.height = -nowHeight + 'px';
+                    cuboidCreat.style.width = nowWidth + 'px';
+                    cuboidCreat.style.top = ev.clientY - oDiv.offsetTop + 'px';
+                } else {
+                    cuboidCreat.style.width = nowWidth + 'px';
+                    cuboidCreat.style.height = nowHeight + 'px';
+                }
+                if (nowWidth < 0) {
+                    cuboidCreat.style.width = -nowWidth + 'px';
+                    if (nowHeight < 0) {
+                        cuboidCreat.style.height = -nowHeight + 'px';
+                        cuboidCreat.style.top = ev.clientY - oDiv.offsetTop + 'px';
+                    } else {
+                        cuboidCreat.style.height = nowHeight + 'px';
+                    }
+                    cuboidCreat.style.left = ev.clientX - oDiv.offsetLeft + 'px';
+                }
+            }
+            document.onmouseup = function(){
+                cuboidCreat.style.transition = '2s all';
+                cuboidCreat.style.borderStyle = 'solid';
+                cuboidCreat.style.background = 'rgb('+ Number(Math.random()*255)+','+ Number(Math.random()*255) + ','+Number(Math.random()*255)+')';
+                document.onmousemove = null;
+                document.onmouseup = null;
+            }
+            return false;
+    }
+</script>
+</body>
+</html>

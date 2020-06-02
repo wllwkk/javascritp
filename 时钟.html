@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>clock</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body > div {
+            height: 300px;
+            width: 300px;
+            border: 4px solid #cccccc;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -150px 0 0 -150px;
+            box-shadow: 10px 10px 20px #cccccc;
+        }
+
+        .active {
+            transition: 1s all ease;
+        }
+
+        .oClock > div:nth-child(1) {
+            height: 20px;
+            width: 20px;
+            z-index: 5;
+            background: #fede4f;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -10px 0 0 -10px;
+        }
+
+        .oClock > div:nth-child(2) {
+            height: 140px;
+            width: 2px;
+            z-index: 1;
+            background: red;
+            position: absolute;
+            left: 50%;
+            margin: 38px 0 0 -1px;
+            transform-origin: 50% 80%;
+            border-radius: 10px;
+        }
+
+        .oClock > div:nth-child(3) {
+            height: 100px;
+            width: 4px;
+            z-index: 2;
+            background: aqua;
+            position: absolute;
+            left: 50%;
+            margin: 50px 0 0 -2px;
+            transform-origin: bottom center;
+            border-radius: 10px;
+        }
+
+        .oClock > div:nth-child(4) {
+            height: 70px;
+            width: 8px;
+            z-index: 3;
+            background: black;
+            position: absolute;
+            left: 50%;
+            margin: 80px 0 0 -4px;
+            transform-origin: bottom center;
+            border-radius: 10px;
+        }
+
+        .oClock {
+            width: 100%;
+            height: 100%;
+        }
+
+        .oLeft {
+            width: 15px;
+            height: 100%;
+            background: orangered;
+            float: left;
+            opacity: 0.3;
+        }
+
+        .oRight {
+            width: 15px;
+            height: 100%;
+            background: orangered;
+            float: right;
+            opacity: 0.3;
+
+        }
+
+        .sLeft {
+            width: 4px;
+            height: 100%;
+            background: black;
+            float: left;
+            opacity: 0.5;
+        }
+
+        .sRight {
+            width: 4px;
+            height: 100%;
+            background: black;
+            float: right;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="oClock">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+<script type="text/javascript">
+    function move() {
+        let _this = this;
+        _this.index = 0;
+        _this.Second = document.querySelector('.oClock>div:nth-child(2)');
+        _this.Minutes = document.querySelector('.oClock>div:nth-child(3)');
+        _this.Hours = document.querySelector('.oClock>div:nth-child(4)');
+        _this.oDiv = document.querySelector('body>div');
+        _this.divArry = ['<div class="oLeft"></div><div class="oRight"></div>'].join(' ');
+        _this.divArry1 = ['<div class="sLeft"></div><div class="sRight"></div>'].join(' ')
+        _this.rotateDeg(_this);
+        _this.setIn(_this);
+        _this.createDiv(_this);
+        _this.notCopy();
+    }
+
+    move.prototype = {
+        'rotateDeg': function (_this) {
+            _this.oData = new Date();
+            _this.oSecond = _this.oData.getSeconds();
+            _this.oMinutes = _this.oData.getMinutes();
+            _this.ohours = _this.oData.getHours();
+            _this.Second.style.transform = 'rotate(' + _this.oSecond * 6 + 'deg)';
+            _this.Minutes.style.transform = 'rotate(' + _this.oMinutes * 6 + 'deg)';
+            _this.Hours.style.transform = 'rotate(' + (_this.ohours % 12 * 30 + _this.oMinutes * 6 / 12) + 'deg)';
+        },
+        'setIn': function (_this) {
+            setInterval(function () {
+                _this.oData = new Date();
+                _this.oSecond = _this.oData.getSeconds();
+                _this.oMinutes = _this.oData.getMinutes();
+                _this.ohours = _this.oData.getHours();
+                _this.oSecond == 0 ? _this.Second.className = ' ' : _this.Second.className = 'active';
+                _this.oMinutes == 0 ? _this.Minutes.className = ' ' : _this.Minutes.className = 'active';
+                _this.Second.style.transform = 'rotate(' + _this.oSecond * 6 + 'deg)';
+                _this.Minutes.style.transform = 'rotate(' + _this.oMinutes * 6 + 'deg)';
+                _this.Hours.style.transform = 'rotate(' + (_this.ohours % 12 * 30 + _this.oMinutes * 6 / 12) + 'deg)';
+            }, 1000)
+        },
+        'createDiv': function (_this) {
+            for (let i = 0; i < 6; i++) {
+                _this.nowClock = document.createElement('div');
+                _this.nowClock.innerHTML = _this.divArry;
+                _this.nowClock.style.cssText = 'height: 10px;width: 100%;position: absolute;top:50%;margin: -5px 0 0 0;transform:rotate(' + i * 30 + 'deg)'
+                _this.oDiv.appendChild(_this.nowClock);
+            }
+            for (let i = 0; i < 30; i++) {
+                if (i % 5 == 0) continue;
+                _this.nowClock1 = document.createElement('div');
+                _this.nowClock1.innerHTML = _this.divArry1;
+                _this.nowClock1.style.cssText = 'height: 5px;width: 100%;position: absolute;top:50%;margin: -2px 0 0 0;transform:rotate(' + i * 6 + 'deg)'
+                _this.oDiv.appendChild(_this.nowClock1);
+            }
+            for (let i = 12; i >= 1; i--) {
+                _this.nowCount = document.createElement('div');
+                _this.nowCount.style.cssText = 'height:128px;width:20px;position: absolute;left: 50%;top:50%;margin:-128px 0 0 -10px;transform-origin:bottom center; transform:rotate(' + _this.index * -30 + 'deg)';
+                _this.oDiv.appendChild(_this.nowCount);
+                _this.nowCountRotate = document.createElement('span');
+                _this.nowCountRotate.style.cssText = 'display:block;width:20px;height:15px;transform:rotate(' + _this.index * 30 + 'deg);text-align: center;'
+                _this.nowCountRotate.innerHTML = i;
+                _this.nowCount.appendChild(_this.nowCountRotate);
+                _this.index++;
+            }
+        },
+        notCopy: function () {
+            document.onmousedown = function () {
+                return false;
+            }
+        }
+    }
+    new move();
+</script>
+</body>
+</html>

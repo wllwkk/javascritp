@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>淘宝选项卡</title>
+	<style type="text/css">
+		*{
+			margin: 0;padding: 0;
+			list-style:none;
+		}
+		.container{
+			width: 400px;
+			height: 400px;
+			border: 1px solid black;
+		}
+		ul{
+			height: 100%;
+			width: 80px;
+			
+		}
+		.ulLeft{
+			float: left;
+		}
+		.ulRight{
+			/* position: relative;
+			left: 220px; */
+			float: right;
+
+		}
+		li{
+			height: 60px;
+			width: 60px;
+			background:green;
+			display:block;
+			margin-top:4px;
+			position: relative;
+			top: 8px;
+			left: 10px;
+			text-align: center;
+			line-height:60px;
+			cursor: pointer;
+		}
+		.active{
+			background: yellow;
+		}
+		.divBg{
+			width: 60%;
+			height: 100%;
+			background: #263238;
+			z-index: -1;
+			margin: 0 auto;
+		}
+		input{
+			height: 50px;
+			width:80px;
+		}
+	</style>
+</head>
+<body>
+	<input type="button" class="btn1" value="next">
+	<input type="button" class="btn2" value="交互">
+	<input type="button" class="btn3" value="同步">
+	<div class="container">
+		<ul class="ulLeft" id="ul1">
+			<li>一</li>
+			<li>二</li>
+			<li>三</li>
+			<li>四</li>
+		</ul>
+		<ul class="ulRight" id="ul2">
+			<li>四</li>
+			<li>三</li>
+			<li>二</li>
+			<li>一</li>
+		</ul>
+		<div class="divBg"></div>
+	</div>
+	<script type="text/javascript">
+		let leftIndex = 0;
+		let rightIndex = 3;
+		let changeJt = false;
+		let setIn = null;
+		/*let arrAll = ['一' , '二' , '三' , '四'];*/
+		let allInput = document.getElementsByTagName('input');
+		let leftUl = document.getElementById('ul1').children;
+		let rightUl = document.getElementById('ul2').children;
+		leftUl[leftIndex].className = 'active';
+		rightUl[rightIndex].className = 'active';
+		setIn = setInterval(function() {
+			clearLi();
+			if (!changeJt) {
+				rightIndex = 3 - leftIndex;
+				leftIndex++;
+				rightIndex--;
+				if (leftIndex == 4) leftIndex = 0;
+				if (rightIndex == -1) rightIndex = 3;
+				leftUl[leftIndex].className = 'active';
+				rightUl[rightIndex].className = 'active';
+			} else {
+				rightIndex = leftIndex;
+				leftIndex++;
+				rightIndex++;
+				if (leftIndex == 4) leftIndex = 0;
+				if (rightIndex == 4) rightIndex = 0;
+				leftUl[leftIndex].className = 'active';
+				rightUl[rightIndex].className = 'active';
+			}
+		}, 1000);
+
+		function clearLi() {
+			for(let i = 0; i < leftUl.length; i++){
+				leftUl[i].className = '';
+				rightUl[i].className = '';
+			}
+		}//清除所有颜色
+		allInput[1].onclick = function(){
+			changeJt = false;
+			for(let i = 0 ; i < leftUl.length ; i++){
+			leftUl[i].onclick = function(){
+				leftIndex = i;
+				rightIndex = (rightUl.length-1) - i;
+				clearLi();
+				leftUl[leftIndex].className = 'active';
+				rightUl[rightIndex].className = 'active';
+			}
+		}//交互模式下左边的所有点击事件
+		allInput[0].onclick = function(){
+			clearLi();
+			rightIndex =3 - leftIndex;
+			leftIndex++;
+			rightIndex--;
+			if(leftIndex == 4)leftIndex = 0;
+			if(rightIndex == -1)rightIndex = 3;
+			leftUl[leftIndex].className = 'active';
+			rightUl[rightIndex].className = 'active';
+		}//next的交互模式下事件下一张
+		for(let i = 0 ; i < rightUl.length ; i++){
+			rightUl[i].onclick = function(){
+				clearLi();
+				rightIndex = i;
+				leftIndex = (leftUl.length-1) - i;
+				rightUl[rightIndex].className = 'active';
+				leftUl[leftIndex].className = 'active';
+			}
+		}//交互模式下右边的所有点击事件
+		}/*交互模式*/
+		allInput[2].onclick = function(){
+			changeJt = true;
+			for(let i = 0 ; i < leftUl.length ; i++){
+				leftUl[i].onclick = function(){
+					clearLi();
+					leftIndex = i;
+					rightIndex = leftIndex;
+					leftUl[leftIndex].className = 'active';
+					rightUl[rightIndex].className = 'active';
+				}
+			}
+			for(let i = 0 ; i < rightUl.length ; i++){
+				rightUl[i].onclick = function(){
+					clearLi();
+					leftIndex = i;
+					rightIndex = leftIndex;
+					leftUl[leftIndex].className = 'active';
+					rightUl[rightIndex].className = 'active';
+				}
+			}
+			allInput[0].onclick = function(){
+			clearLi();
+			rightIndex = leftIndex;
+			leftIndex++;
+			rightIndex++;
+			if(leftIndex == 4)leftIndex = 0;
+			if(rightIndex == 4)rightIndex = 0;
+			leftUl[leftIndex].className = 'active';
+			rightUl[rightIndex].className = 'active';
+		}//同步模式下next
+		}//同步模式选择
+	</script>
+</body>
+</html>

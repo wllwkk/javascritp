@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        *{
+            margin:0;
+            padding:0;
+        }
+        body>div:first-child {
+            width: 200px;
+            height: 200px;
+            background: #b8faff;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -100px;
+            margin-top: -100px;
+            /*transition: 1s all ease;*/
+            transform: rotateY(60deg) rotateX(60deg);
+            transform-style: preserve-3d;
+        }
+
+        body>div:first-child>div:first-of-type {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: grey;
+            transform: translateZ(100px);
+        }
+
+        body>div:first-child>*:nth-child(2){
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: greenyellow;
+            transform: translateZ(-100px);
+        }
+
+        body>div:first-child>div:nth-child(3) {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: rebeccapurple;
+            transform: rotateY(90deg) translateZ(-100px);
+        }
+
+        body>div:first-child>div:nth-child(3)+div {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: black;
+            transform: rotateX(90deg) translateZ(-100px);
+        }
+
+        body>div:first-child>div:first-of-type~div:nth-child(5) {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: brown;
+            transform: rotateX(90deg) translateZ(100px);
+        }
+
+        body>div:first-child>div:nth-child(6) {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: pink;
+            transform: rotateY(90deg) translateZ(100px);
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+<script type="text/javascript">
+    function divRotate() {
+        this.oDiv = document.querySelector('body>div:first-child');
+        this.originRotateX = this.originRotateY = 60;
+        this.mouseDownStartRotate(this);
+    }
+
+    divRotate.prototype = {
+        'mouseMove': function (_this) {
+            document.onmousemove = function (e) {
+                _this.ev = e || event;
+                _this.endX = _this.ev.clientX;
+                _this.endY = _this.ev.clientY;
+                _this.resultX = _this.startX - _this.endX;
+                _this.resultY = _this.startY - _this.endY;
+                _this.oDiv.style.transform = 'rotateY(' + (_this.originRotateX - _this.resultX) + 'deg' + ') rotateX(' + (_this.originRotateY + _this.resultY) + 'deg' + ')';
+            }
+        },
+        'mouseClear': function (_this) {
+            document.onmouseup = function () {
+                _this.originRotateX -= _this.resultX;
+                _this.originRotateY += _this.resultY;
+                /*console.log(_this.resultX);*/
+                document.onmousemove = document.onmouseup = null;
+            }
+        },
+        'mouseDownStartRotate': function (_this) {
+            document.onmousedown = function (e) {
+                _this.ev = e || event;
+                _this.startX = _this.ev.clientX;
+                _this.startY = _this.ev.clientY;
+                _this.mouseMove(_this);
+                _this.mouseClear(_this);
+                /*console.log(_this.resultX)*/
+                return false;
+
+            }
+        }
+    }
+    new divRotate();
+</script>
+</body>
+</html>
